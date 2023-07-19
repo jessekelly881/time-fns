@@ -16,3 +16,7 @@ export const seconds = (seconds: number): Duration => new DurationImpl(seconds *
 export const minutes = (minutes: number): Duration => new DurationImpl(minutes * 1000 * 60)
 
 export const hours = (hours: number): Duration => new DurationImpl(hours * 1000 * 60 * 60)
+
+export const times = (n: number) => (d: Duration): Duration => new DurationImpl(d.ms * n)
+
+export const add = (that: Duration) => (self: Duration): Duration => new DurationImpl(self.ms + that.ms)
