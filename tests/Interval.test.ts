@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { make, extendBy } from "../src/Interval";
+import { make, extendBy, shortenBy, sequence } from "../src/Interval";
 import { seconds } from "../src/Duration";
 import { addDuration } from "../src/Date"
 
@@ -14,5 +14,24 @@ describe("Interval", () => {
     it("extendBy", () => {
         const extendedInterval = extendBy(seconds(5))(interval30s) // 35s
         expect(extendedInterval.end).toEqual(new Date("1970-01-01T00:00:35.000Z"))
+    })
+
+    it("shortenBy", () => {
+        const extendedInterval = shortenBy(seconds(5))(interval30s) // 25s
+        expect(extendedInterval.end).toEqual(new Date("1970-01-01T00:00:25.000Z"))
+    })
+
+    it("sequence", () => {
+        const intervals = sequence(2)(interval30s) 
+        expect(intervals).toEqual([
+            make(start, seconds(30)),
+            make(addDuration(seconds(30))(start), seconds(30))
+        ])
+
+        const intervalsWithGap = sequence(2, seconds(1))(interval30s) 
+        expect(intervalsWithGap).toEqual([
+            make(start, seconds(30)),
+            make(addDuration(seconds(31))(start), seconds(30))
+        ])
     })
 })
