@@ -19,6 +19,25 @@ export const addDuration = (...durations: Duration[]) => (date: Date) => {
 export const subDuration = (duration: Duration) => (date: Date) =>
   new Date(date.getTime() - duration.ms);
 
+export const isAfter =
+  (that: Date) =>
+  (self: Date): boolean =>
+    self.getTime() > that.getTime();
+
+export const isAfterOrEqual =
+  (that: Date) =>
+  (self: Date): boolean =>
+    self.getTime() >= that.getTime();
+
+export const isBefore =
+  (that: Date) =>
+  (self: Date): boolean =>
+    self.getTime() < that.getTime();
+
+export const isBeforeOrEqual =
+  (that: Date) =>
+  (self: Date): boolean =>
+    self.getTime() <= that.getTime();
 
 // Round down (floor) to nearest s, m, h, ...
 export const floorTo = (unit: TimeUnit) => (date: Date): Date => {

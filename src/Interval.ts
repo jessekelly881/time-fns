@@ -47,12 +47,32 @@ export const shiftBack =
     new IntervalImpl(subDuration(duration)(interval.start), interval.duration);
 
 /**
- * Subdivides an Interval into chunks of a given Duration. 
+ * Partitions a single Interval into n Intervals of equal size
  */
-const subdivide = (duration: D.Duration) => (interval: Interval): Interval[] => []
+export const partition = (count: number) => (interval: Interval): Interval[] => {
+  let ret: Interval[] = []
+  let start: Date = interval.start;
+
+  for(let i = 0; i < count; i++) {
+    const subDuration = D.ms(interval.duration.ms / count)
+
+    const subInterval = new IntervalImpl(start, subDuration)
+    ret.push(subInterval)
+    start = addDuration(subDuration)(start)
+  }
+
+  return ret;
+}
+
+/**
+ * Partition an Interval into chunks of a given Duration. The last Interval may be shorter than the provided Duration.
+ */
+const partitionByDuration = (duration: D.Duration) => (interval: Interval): Interval[] => []
 
 export const containsDate = (i: Interval) => (d: Date) =>
   d.getTime() >= i.start.getTime() && d.getTime() <= i.end.getTime(); // start <= d <= end
+
+export const clampDate = (i: Interval) => (d: Date) => 1;
 
 /**
  * Determines whether two intervals are overlapping. 
