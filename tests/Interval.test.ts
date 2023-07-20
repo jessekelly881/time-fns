@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { make, extendBy, shortenBy, sequence, partition } from "../src/Interval";
-import { seconds } from "../src/Duration";
+import { make, extendBy, shortenBy, sequence, partition, shiftBackToNearest } from "../src/Interval";
+import { seconds, minutes } from "../src/Duration";
 import { addDuration } from "../src/Date"
 
 const start = new Date("1970-01-01T00:00:00.000Z")
@@ -42,5 +42,30 @@ describe("Interval", () => {
             make(start, seconds(30)),
             make(addDuration(seconds(31))(start), seconds(30))
         ])
+    })
+
+    it("shiftBackToNearest", () => {
+        const testInterval = make(new Date("1970-01-01T01:12:34.567Z"), minutes(30))
+
+        expect(shiftBackToNearest("s")(testInterval)).toEqual({
+            _tag: "Interval",
+            start: new Date("1970-01-01T01:12:34.000Z"), // 1:12:34
+            end: new Date("1970-01-01T01:42:34.000Z"),   // 1:42:34
+            duration: minutes(30)
+        })
+
+        expect(shiftBackToNearest("m")(testInterval)).toEqual({
+            _tag: "Interval",
+            start: new Date("1970-01-01T01:12:00.000Z"), // 1:12
+            end: new Date("1970-01-01T01:42:00.000Z"),   // 1:42
+            duration: minutes(30)
+        })
+
+        expect(shiftBackToNearest("h")(testInterval)).toEqual({
+            _tag: "Interval",
+            start: new Date("1970-01-01T01:00:00.000Z"), // 1:00
+            end: new Date("1970-01-01T01:30:00.000Z"),   // 1:30
+            duration: minutes(30)
+        })
     })
 })

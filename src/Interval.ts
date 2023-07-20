@@ -1,5 +1,5 @@
 import * as D from "./Duration";
-import { addDuration, subDuration } from "./Date";
+import { addDuration, subDuration, TimeUnit, floorTo } from "./Date";
 
 
 // Represents a time interval w/ a start `Date` and a `Duration`.
@@ -45,6 +45,12 @@ export const shiftBack =
   (duration: D.Duration) =>
   (interval: Interval): Interval =>
     new IntervalImpl(subDuration(duration)(interval.start), interval.duration);
+
+/**
+ * Shifts start time to back (floor) the nearest second, minute, hour, etc. 
+ */
+export const shiftBackToNearest = (unit: TimeUnit) => (i: Interval): Interval => 
+  new IntervalImpl(floorTo(unit)(i.start), i.duration)
 
 /**
  * Partitions a single Interval into n Intervals of equal size
